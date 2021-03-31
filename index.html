@@ -1,36 +1,52 @@
-<div id="page-wrapper">
-    <h1>ROONS</h1>
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>ROONS</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="styles.css">
+    </head>
 
-    <p id="msg">asdfasdf</p>
+    <div id="page-wrapper">
+        <h1>ROONS</h1>
 
-    <input type="text" name="speech-msg" id="speech-msg" x-webkit-speech>
+        <div class="card">
 
-    <div class="option">
-        <label for="voice">Voice</label>
-        <select name="voice" id="voice"></select>
+            <input type="text" name="clock" id="clock" style="text-align: center; font-size: 24px;" value="-00:45">
+            <div style="text-align: center; padding: 10px;">
+                <button id="decTen">-10</button>
+                <button id="decOne">-1</button>
+                <button id="playPause">▶</button>
+                <button id="incOne">+1</button>
+                <button id="incTen">+10</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Settings</h2>
+            <p id="supportMsg"></p>
+
+            <button id="speak">Speak</button>
+            <input type="text" id="speechMsg" value="This is what I sound like." x-webkit-speech>
+
+            <div class="option">
+                <label for="voice">Voice</label>
+                <select name="voice" id="voice"></select>
+            </div>
+            <div class="option">
+                <label for="volume">Volume</label>
+                <input type="range" min="0" max="1" step="0.1" name="volume" id="volume" value="1">
+            </div>
+            <div class="option">
+                <label for="rate">Rate</label>
+                <input type="range" min="0.1" max="2" step="0.1" name="rate" id="rate" value="1">
+            </div>
+            <div class="option">
+                <label for="pitch">Pitch</label>
+                <input type="range" min="0" max="2" step="0.1" name="pitch" id="pitch" value="0.8">
+            </div>
+        </div>
     </div>
-    <div class="option">
-        <label for="volume">Volume</label>
-        <input type="range" min="0" max="1" step="0.1" name="volume" id="volume" value="1">
-    </div>
-    <div class="option">
-        <label for="rate">Rate</label>
-        <input type="range" min="0.1" max="10" step="0.1" name="rate" id="rate" value="1">
-    </div>
-    <div class="option">
-        <label for="pitch">Pitch</label>
-        <input type="range" min="0" max="2" step="0.1" name="pitch" id="pitch" value="0.8">
-    </div>
+    <script src="./index.js"></script>
 
-    <button id="speak">Speak</button>
-</div>
-<div>
-
-    <button id="playPause">Play/Pause</button>
-    
-    <button id="decOne">-1</button>
-    <input type="text" name="clock" id="clock" value="-00:45">
-    <button id="incOne">+1</button>
-
-</div>
-<script src="./index.js"></script>
+</html>

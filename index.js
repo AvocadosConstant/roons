@@ -1,7 +1,7 @@
 /*
  *  * Check for browser support
  *   */
-var supportMsg = document.getElementById('msg');
+var supportMsg = document.getElementById('supportMsg');
 
 if ('speechSynthesis' in window) {
     supportMsg.innerHTML = 'Your browser <strong>supports</strong> speech synthesis.';
@@ -11,11 +11,13 @@ if ('speechSynthesis' in window) {
 }
 
 var speakButton = document.getElementById('speak');
+var decTen = document.getElementById('decTen');
 var decOne = document.getElementById('decOne');
 var incOne = document.getElementById('incOne');
+var incTen = document.getElementById('incTen');
 var playPause = document.getElementById('playPause');
 
-var speechMsgInput = document.getElementById('speech-msg');
+var speechMsgInput = document.getElementById('speechMsg');
 let clock = document.getElementById('clock');
 
 var voiceSelect = document.getElementById('voice');
@@ -93,14 +95,13 @@ voiceSelect.addEventListener("change", function(e) {
 let running = false;
 let gameSeconds = -45;
 
-speakButton.addEventListener('click', function(e) {
-  if (speechMsgInput.value.length > 0) {
-    speak(speechMsgInput.value);
-  }
-});
-
 incOne.addEventListener('click', function(e) {
   gameSeconds++;
+  clock.value = secsToTime(gameSeconds);
+});
+
+incTen.addEventListener('click', function(e) {
+  gameSeconds+=10;
   clock.value = secsToTime(gameSeconds);
 });
 
@@ -109,8 +110,19 @@ decOne.addEventListener('click', function(e) {
   clock.value = secsToTime(gameSeconds);
 });
 
+decTen.addEventListener('click', function(e) {
+  gameSeconds-=10;
+  clock.value = secsToTime(gameSeconds);
+});
+
 playPause.addEventListener('click', function(e) {
   running = !running;
+  if (running)
+    playPause.innerText = "❚❚";
+  else
+    playPause.innerText = "▶";
+
+  console.log(playPause);
 });
 
 clock.addEventListener("change", function(e) {
