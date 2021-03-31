@@ -10,7 +10,9 @@ if ('speechSynthesis' in window) {
       supportMsg.classList.add('not-supported');
 }
 
-var button = document.getElementById('speak');
+var speakButton = document.getElementById('speak');
+var decOne = document.getElementById('decOne');
+var incOne = document.getElementById('incOne');
 var playPause = document.getElementById('playPause');
 
 var speechMsgInput = document.getElementById('speech-msg');
@@ -78,7 +80,7 @@ function speak(text) {
 
 
 // Set up an event listener for when the 'speak' button is clicked.
-button.addEventListener('click', function(e) {
+speakButton.addEventListener('click', function(e) {
   if (speechMsgInput.value.length > 0) {
     speak(speechMsgInput.value);
   }
@@ -90,6 +92,22 @@ voiceSelect.addEventListener("change", function(e) {
 
 let running = false;
 let gameSeconds = -45;
+
+speakButton.addEventListener('click', function(e) {
+  if (speechMsgInput.value.length > 0) {
+    speak(speechMsgInput.value);
+  }
+});
+
+incOne.addEventListener('click', function(e) {
+  gameSeconds++;
+  clock.value = secsToTime(gameSeconds);
+});
+
+decOne.addEventListener('click', function(e) {
+  gameSeconds--;
+  clock.value = secsToTime(gameSeconds);
+});
 
 playPause.addEventListener('click', function(e) {
   running = !running;
