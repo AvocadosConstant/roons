@@ -1,6 +1,6 @@
-# roons
+# ROONS
 
-Dota timings assistant. (Geared towards support play)
+Dota timings assistant catered to support players.
 
 ### Feature ideas
 
