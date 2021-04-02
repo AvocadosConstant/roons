@@ -1,7 +1,5 @@
-/*
- *  * Check for browser support
- *   */
-var supportMsg = document.getElementById('supportMsg');
+// Check for browser support
+let supportMsg = document.getElementById('supportMsg');
 
 if ('speechSynthesis' in window) {
     supportMsg.innerHTML = 'Your browser <strong>supports</strong> speech synthesis.';
@@ -10,32 +8,35 @@ if ('speechSynthesis' in window) {
       supportMsg.classList.add('not-supported');
 }
 
-var speakButton = document.getElementById('speak');
-var decTen = document.getElementById('decTen');
-var decOne = document.getElementById('decOne');
-var incOne = document.getElementById('incOne');
-var incTen = document.getElementById('incTen');
-var playPause = document.getElementById('playPause');
+let speakButton = document.getElementById('speak');
+let decTen = document.getElementById('decTen');
+let decOne = document.getElementById('decOne');
+let incOne = document.getElementById('incOne');
+let incTen = document.getElementById('incTen');
+let playPause = document.getElementById('playPause');
 
-var speechMsgInput = document.getElementById('speechMsg');
+let eventLogContainer = document.getElementById('eventLogContainer');
+
+// Settings
+let speechMsgInput = document.getElementById('speechMsg');
 let clock = document.getElementById('clock');
 
-var voiceSelect = document.getElementById('voice');
+let voiceSelect = document.getElementById('voice');
 
-var volumeInput = document.getElementById('volume');
-var rateInput = document.getElementById('rate');
-var pitchInput = document.getElementById('pitch');
+let volumeInput = document.getElementById('volume');
+let rateInput = document.getElementById('rate');
+let pitchInput = document.getElementById('pitch');
 
 
 // Fetch the list of voices and populate the voice options.
 function loadVoices() {
   // Fetch the available voices.
-  var voices = speechSynthesis.getVoices();
+  let voices = speechSynthesis.getVoices();
 
   // Loop through each of the voices.
   voices.forEach(function(voice, i) {
     // Create a new option element.
-    var option = document.createElement('option');
+    let option = document.createElement('option');
 
     // Set the options value and text.
     option.value = voice.name;
@@ -59,7 +60,7 @@ window.speechSynthesis.onvoiceschanged = function(e) {
 // the queue.
 function speak(text) {
   // Create a new instance of SpeechSynthesisUtterance.
-  var msg = new SpeechSynthesisUtterance();
+  let msg = new SpeechSynthesisUtterance();
 
   // Set the text.
   msg.text = text;
@@ -138,13 +139,11 @@ function timeToSeconds(rawTime) {
   let sign = 1;
   if (rawTime.charAt(0) === "-") {
     sign = -1;
+    rawTime = rawTime.substring(1)
   }
   let times = rawTime.split(":");
   let min = parseInt(times[0]);
   let sec = parseInt(times[1]);
-  if (sec > 59) {
-    alert("ERROR: Invalid time");
-  }
   return sign * (min * 60 + sec);
 }
 
@@ -159,33 +158,92 @@ function secsToTime(seconds) {
   return (neg ? "-" : "") + min + ":" + secs;
 }
 
+let events = [
+    {
+        "name": "powerRunes",
+        "message": "Power runes spawning",
+        "startTime": "4:00",
+        "interval": 2 * 60,
+        "endTime": null,
+        "delay": 15
+    },
+    {
+        "name": "bountyRunes",
+        "message": "Bounty runes spawning",
+        "startTime": "00:00",
+        "interval": 5 * 60,
+        "endTime": null,
+        "delay": 15
+    },
+    {
+        "name": "stackCamps",
+        "message": "Stack neutrals",
+        "startTime": "1:52",
+        "interval": 60,
+        "endTime": null,
+        "delay": 10
+    },
+    {
+        "name": "tome",
+        "message": "Tome restocking",
+        "startTime": "10:00",
+        "interval": 10 * 60,
+        "endTime": null,
+        "delay": 5
+    },
+    {
+        "name": "pull",
+        "message": "Pull small camp",
+        "startTime": "1:17",
+        "interval": 60,
+        "endTime": "10:00",
+        "delay": 10
+    },
+    {
+        "name": "wards",
+        "message": "Check wards stock",
+        "startTime": "0:135",
+        "interval": 135,
+        "endTime": null,
+        "delay": 0
+    },
+    {
+        "name": "siegeWave",
+        "message": "Siege creep wave spawning",
+        "startTime": "5:00",
+        "interval": 5 * 60,
+        "endTime": null,
+        "delay": 0
+    },
+]
+
+let eventLog = [];
+
+function addEvent(time, event) {
+  eventLog.push(event);
+  let eventDiv = document.createElement("div");
+  eventDiv.class = "event";
+  eventDiv.innerHTML = secsToTime(time) + " " + event.message;
+  eventLogContainer.prepend(eventDiv);
+}
+
 function remind() {
-  console.log("Reminding!");
-  let minute = Math.floor(gameSeconds / 60) + 1;
-  let seconds = gameSeconds % 60;
+  let msgs = [];
 
-  let powerRunes = false;
-  let bounties = false;
+  for (const event of events) {
+    startSecs = timeToSeconds(event.startTime);
+    if (gameSeconds >= startSecs - event.delay
+        && (event.endTime === null || gameSeconds < timeToSeconds(event.endTime))
+        && (gameSeconds + event.delay - startSecs) % event.interval == 0){
+      console.log(gameSeconds, startSecs, event.interval);
+      msgs.push(event.message);
+      addEvent(gameSeconds, event);
+    }
+  }
 
-  let msg = "";
-
-  console.log(minute);
-  if (minute % 2 == 0) {
-    powerRunes = true;
-    msg = "Power runes spawning ";
+  if (msgs.length > 0) {
+    speak(msgs.join(", "));
   }
-  if (minute % 5 == 0) {
-    bounties = true;
-    msg = "Bounty runes spawning ";
-  }
-  if (powerRunes && bounties) {
-    msg = "Bounty and power runes spawning ";
-  }
-  if (powerRunes || bounties) {
-    msg += "in 15. ";
-  }
-  msg += "Stack and pull.";
-  speak(msg);
 }
 
 window.setInterval(function() {
@@ -193,8 +251,6 @@ window.setInterval(function() {
     gameSeconds++;
     clock.value = secsToTime(gameSeconds);
 
-    if (gameSeconds % 60 == 45) {
-      remind();
-    }
+    remind();
   }
 }, 1000);

@@ -3,5 +3,19 @@
     border:1px solid black;
     border-radius: 25px;
     padding: 20px;
-    width: fit-content;
+    width: 400px;
+}
+
+#clock {
+    text-align: center;
+    font-size: 24px;
+}
+
+#eventLogContainer {
+    overflow: auto;
+    height: 300px;
+    width: 300px;
+}
+
+.event {
 }
