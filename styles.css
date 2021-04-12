@@ -1,3 +1,11 @@
+body {
+  background: #2e2e2e;
+  color: #d6d6d6;
+}
+
+#page-wrapper {
+}
+
 .card {
     margin: 20px;
     border:1px solid black;
@@ -13,8 +21,9 @@
 
 #eventLogContainer {
     overflow: auto;
+    display: block;
+    width: 100%;
     height: 300px;
-    width: 300px;
 }
 
 .event {

@@ -94,7 +94,7 @@ voiceSelect.addEventListener("change", function(e) {
 });
 
 let running = false;
-let gameSeconds = -45;
+let gameSeconds = timeToSeconds(clock.value);
 
 incOne.addEventListener('click', function(e) {
   gameSeconds++;
@@ -159,63 +159,94 @@ function secsToTime(seconds) {
 }
 
 let events = [
-    {
-        "name": "powerRunes",
-        "message": "Power runes spawning",
-        "startTime": "4:00",
-        "interval": 2 * 60,
-        "endTime": null,
+  {
+    "name": "waterRunes",
+    "message": "Water runes spawning",
+    "startTime": "2:00",
+    "interval": 2 * 60,
+    "endTime": "4:00",
+    "delay": 15
+  },
+  {
+    "name": "powerRunes",
+    "message": "Power runes spawning",
+    "startTime": "6:00",
+    "interval": 2 * 60,
+    "endTime": null,
+    "delay": 15
+  },
+  {
+    "name": "bountyRunes",
+    "message": "Bounty runes spawning",
+    "startTime": "00:00",
+    "interval": 3 * 60,
+    "endTime": null,
+    "delay": 15
+  },
+  {
+    "name": "stackCamps",
+    "message": "Stack neutrals",
+    "startTime": "1:52",
+    "interval": 60,
+    "endTime": null,
+    "delay": 10
+  },
+  {
+    "name": "tome",
+    "message": "Tome restocking",
+    "startTime": "10:00",
+    "interval": 10 * 60,
+    "endTime": null,
+    "delay": 5
+  },
+  {
+    "name": "pull",
+    "message": "Pull small camp",
+    "startTime": "1:17",
+    "interval": 60,
+    "endTime": "10:00",
+    "delay": 10
+  },
+  {
+    "name": "wards",
+    "message": "Check wards stock",
+    "startTime": "0:135",
+    "interval": 135,
+    "endTime": null,
+    "delay": 0
+  },
+  {
+    "name": "siegeWave",
+    "message": "Siege creep wave spawning",
+    "startTime": "5:00",
+    "interval": 5 * 60,
+    "endTime": null,
+    "delay": 0
+  },
+];
+
+let timers = [
+  {
+    "name": "roshan",
+    "events": [
+      {
+        "name": "aegis",
+        "message": "Aegis expiring",
         "delay": 15
-    },
-    {
-        "name": "bountyRunes",
-        "message": "Bounty runes spawning",
-        "startTime": "00:00",
-        "interval": 5 * 60,
-        "endTime": null,
-        "delay": 15
-    },
-    {
-        "name": "stackCamps",
-        "message": "Stack neutrals",
-        "startTime": "1:52",
-        "interval": 60,
-        "endTime": null,
-        "delay": 10
-    },
-    {
-        "name": "tome",
-        "message": "Tome restocking",
-        "startTime": "10:00",
-        "interval": 10 * 60,
-        "endTime": null,
-        "delay": 5
-    },
-    {
-        "name": "pull",
-        "message": "Pull small camp",
-        "startTime": "1:17",
-        "interval": 60,
-        "endTime": "10:00",
-        "delay": 10
-    },
-    {
-        "name": "wards",
-        "message": "Check wards stock",
-        "startTime": "0:135",
-        "interval": 135,
-        "endTime": null,
+      },
+      {
+        "name": "roshanUpStart",
+        "message": "Roshan may have respawned",
         "delay": 0
-    },
-    {
-        "name": "siegeWave",
-        "message": "Siege creep wave spawning",
-        "startTime": "5:00",
-        "interval": 5 * 60,
-        "endTime": null,
+      },
+      {
+        "name": "roshanUpEnd",
+        "message": "Roshan has respawned",
         "delay": 0
-    },
-]
+      }
+    ],
+  }
+];
 
 let eventLog = [];
 
@@ -233,7 +264,7 @@ function remind() {
   for (const event of events) {
     startSecs = timeToSeconds(event.startTime);
     if (gameSeconds >= startSecs - event.delay
-        && (event.endTime === null || gameSeconds < timeToSeconds(event.endTime))
+        && (event.endTime === null || gameSeconds <= timeToSeconds(event.endTime))
         && (gameSeconds + event.delay - startSecs) % event.interval == 0){
       console.log(gameSeconds, startSecs, event.interval);
       msgs.push(event.message);
